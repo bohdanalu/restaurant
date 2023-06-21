@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Borgia - Milano",
+    "description": "Experience the rich flavors of Italian cuisine in the heart of Milano. Our restaurant offers a blend of traditional and contemporary dishes that will tantalize your taste buds. Join us for an unforgettable dining experience.",
+    "photo": "https://foodandpleasure.com/wp-content/uploads/2018/06/piantao-3.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Arcano Restaurant & Music",
+    "description": " Immerse yourself in the vibrant atmosphere of Arcano Restaurant & Music. Indulge in our exquisite menu inspired by international flavors, accompanied by live music performances. Discover a harmonious fusion of culinary delights and captivating melodies.",
+    "photo": "https://th.bing.com/th/id/OIP.nFJnSVX8ZipSCFknX43OxwHaE8?pid=ImgDet&rs=1"
+  },
+  {
+    "id": 3,
+    "name": "Ristorante Rubacuori",
+    "description": "At Ristorante Rubacuori, we believe in the power of love and good food. Our cozy restaurant invites you to savor authentic Italian recipes made with passion and served with a warm smile. Let us steal your heart with our delightful creations.",
+    "photo": "https://www.restaurantemawey.com/wp-content/uploads/2019/02/Mawey-Local-San-Bernardo-5-1-1.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Tutta Nata Storia",
+    "description": "Tutta Nata Storia is where food tells a story. Step into a world of culinary adventures as our talented chefs take you on a gastronomic journey through time. Each dish embodies a chapter of history, delighting your senses and creating unforgettable memories.",
+    "photo": "https://th.bing.com/th/id/OIP.htGyKUidB6b0-wddIyQkTgHaEM?pid=ImgDet&rs=1"
+  },
+  {
+    "id": 5,
+    "name": "Clamour Noodle House",
+    "description": "Clamour Noodle House is your gateway to the flavors of the Far East. Our noodle dishes are a symphony of aromas, colors, and textures that will transport you to the bustling streets of Asia. Join us for an authentic dining experience that will leave you craving more.",
+    "photo": "https://s1.eestatic.com/2019/10/26/cocinillas/restaurantes/cocina_tradicional_y_de_mercado-restaurantes-restaurantes_439716912_136266402_1706x960.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Officina del Riso Isola",
+    "description": "Welcome to Officina del Riso Isola, where rice takes center stage. Our culinary artisans masterfully craft rice-based creations inspired by Italian traditions. From creamy risottos to crispy arancini, indulge in the diverse world of rice at our enchanting restaurant.",
+    "photo": "https://www.hola.com/imagenes/decoracion/2016111189633/restaurantes-con-personalidad-propia/0-402-815/restaurantes-4-a.jpg.jpg"
+  }
+]

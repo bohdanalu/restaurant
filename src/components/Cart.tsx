@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { useCart } from "../context/CartContext";
+import type { RootState } from "../store/store";
+import {
+  incrementItem,
+  removeItemFromCart,
+  clearCart,
+} from "../store/cart_slice";
+import { useDispatch, useSelector } from "react-redux";
 import {
   List,
   ListItem,
@@ -19,10 +25,11 @@ import {
   AddCircle,
   ShoppingBasket,
 } from "@mui/icons-material";
+import { MenuType, CartItem } from "../types";
 
 function Cart() {
-  const { cartItems, handleRemoveFromCart, handleAddtoCart, handleClearCart } =
-    useCart();
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [total, setTotal] = useState(0 as number);
   const [totalItems, setTotalItems] = useState(0 as number);
@@ -30,6 +37,22 @@ function Cart() {
   const currentTime = new Date().getTime();
   localStorage.setItem("lastActivityTime", `${currentTime}`);
   const lastActivityTime = localStorage.getItem("lastActivityTime");
+
+  const handleToggleCart = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleAddToCart = (id: number) => {
+    dispatch(incrementItem(id));
+  };
+
+  const handleRemoveFromCart = (id: number) => {
+    dispatch(removeItemFromCart(id));
+  };
+
+  const handleClearCart = () => {
+    dispatch(clearCart());
+  };
 
   useEffect(() => {
     if (lastActivityTime) {
@@ -41,20 +64,18 @@ function Cart() {
         localStorage.setItem("lastActivityTime", `${currentTime}`);
       }
     }
-  }, []);
+  }, [lastActivityTime]);
 
   useEffect(() => {
     const calculateTotal = () => {
       const totalVal = cartItems.reduce((acc, curVal) => {
-        return acc + curVal.quantity * curVal.menuItem.price;
+        if (curVal.menuItem && curVal.menuItem.price) {
+          return acc + curVal.quantity * curVal.menuItem.price;
+        }
+        return acc;
       }, 0);
       setTotal(+totalVal.toFixed(2));
     };
-
-    calculateTotal();
-  }, [cartItems]);
-
-  useEffect(() => {
     const calculateTotalItems = () => {
       const items = cartItems.reduce((acc, val) => {
         return acc + val.quantity;
@@ -64,25 +85,22 @@ function Cart() {
     };
 
     calculateTotalItems();
+    calculateTotal();
+    console.log(cartItems);
   }, [cartItems]);
 
-  const handleToggleCart = () => {
-    setIsOpen(!isOpen);
-  };
-
   useEffect(() => {
-    if (!isSmallScreen) {
-      setIsOpen(true);
-    }
-    if (isSmallScreen) {
-      setIsOpen(false);
-    }
+    setIsOpen(!isSmallScreen);
   }, [isSmallScreen]);
 
   return (
     <div>
       {isSmallScreen && cartItems.length !== 0 && (
-        <IconButton aria-label="cart" onClick={handleToggleCart}>
+        <IconButton
+          aria-label="cart"
+          sx={{ position: "absolute", right: "1rem", top: "1rem" }}
+          onClick={handleToggleCart}
+        >
           <Badge color="secondary" badgeContent={totalItems}>
             <ShoppingBasket />
           </Badge>
@@ -117,7 +135,7 @@ function Cart() {
                 >
                   <IconButton
                     aria-label="add to shopping cart"
-                    onClick={() => handleAddtoCart(item.menuItem)}
+                    onClick={() => handleAddToCart(item.menuItem.id)}
                   >
                     <AddCircle />
                   </IconButton>
@@ -125,7 +143,7 @@ function Cart() {
                   <IconButton
                     edge="end"
                     aria-label="delete"
-                    onClick={() => handleRemoveFromCart(item.menuItem)}
+                    onClick={() => handleRemoveFromCart(item.menuItem.id)}
                   >
                     {item.quantity > 1 ? <RemoveCircle /> : <Delete />}
                   </IconButton>

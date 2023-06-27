@@ -51,6 +51,7 @@ function Restaurant({
         });
     }
   }, [menuUrl, setMenu, setMenuFetched, id]);
+
   const selectedRestaurant = restaurants.find(
     (restaurant) => restaurant.id === parseInt(id || "", 10)
   );
@@ -61,17 +62,19 @@ function Restaurant({
       filteredMenu = menuFetched;
     } else {
       filteredMenu = menuFetched.filter(
-        (item) => item.category.toLowerCase() === btn.toLowerCase()
+        (item) => item.category?.toLowerCase() === btn.toLowerCase()
       );
     }
     setMenu(filteredMenu);
   };
 
-  return (
+  return selectedRestaurant ? (
     <Box pt={2}>
-      <Typography variant="h3">{selectedRestaurant?.name}</Typography>
+      <Typography variant="h3" component={"h2"}>
+        {selectedRestaurant.name}
+      </Typography>
       <Typography sx={{ fontFamily: "Monospace" }}>
-        {selectedRestaurant?.description}
+        {selectedRestaurant.description}
       </Typography>
       <Typography variant="h4" p={2}>
         Menu
@@ -80,8 +83,10 @@ function Restaurant({
         menu={menu}
         handleChooseCategories={handleChooseCategories}
       />
-      <Menu menu={menu} />
+      <Menu menu={menu} restaurantId={selectedRestaurant.id} />
     </Box>
+  ) : (
+    <p>Menu not found</p>
   );
 }
 

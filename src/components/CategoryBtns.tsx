@@ -1,4 +1,3 @@
-import { useCart } from "../context/CartContext";
 import { Button, Box } from "@mui/material";
 import { MenuType } from "../types";
 
@@ -15,11 +14,10 @@ const buttons = [
 
 interface CategoryProps {
   menu: MenuType[];
-  // setMenu: React.Dispatch<React.SetStateAction<MenuType[]>>;
   handleChooseCategories: (btn: string) => void;
 }
 
-function CategoryBtns({ menu, handleChooseCategories }: CategoryProps) {
+function CategoryBtns({ handleChooseCategories }: CategoryProps) {
   return (
     <Box mb={2}>
       {buttons.map((btn) => (

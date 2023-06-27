@@ -20,7 +20,7 @@ const MenuItem = ({ menuItem, restaurantId }: MenuItemProps) => {
   const dispatch = useDispatch();
 
   const handleAddToCart = (menuItem: MenuType) => {
-    dispatch(addItemToCart({ menuItem }));
+    dispatch(addItemToCart({ menuItem, restaurantId }));
   };
 
   return (
@@ -53,7 +53,6 @@ const MenuItem = ({ menuItem, restaurantId }: MenuItemProps) => {
             marginTop: "auto",
           }}
         >
-          <p>{restaurantId}</p>
           <Button
             variant="outlined"
             sx={{ textTransform: "none", position: "absolute" }}

@@ -39,12 +39,17 @@ function Restaurant({
 
   useEffect(() => {
     if (id) {
+      console.log(id);
       axios
         .get(`${menuUrl}`)
         .then((response) => {
-          const fetchedMenu = response.data[id].items;
-          setMenu(fetchedMenu);
-          setMenuFetched(fetchedMenu);
+          const fetchedMenu = response.data.find(
+            (restaurant: { id: string }) => restaurant.id.toString() === id
+          );
+          if (fetchedMenu) {
+            setMenu(fetchedMenu.items);
+            setMenuFetched(fetchedMenu.items);
+          }
         })
         .catch((error) => {
           console.error(error);

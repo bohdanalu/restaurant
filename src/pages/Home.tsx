@@ -86,52 +86,56 @@ function Home({ restaurants, setRestaurants, urlMain }: restaurantProps) {
   return (
     <div style={{ width: "100%" }}>
       <Typography variant="h2">Restaurant List</Typography>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-around",
-          flexWrap: "wrap",
-          width: "100%",
-          gap: "20px",
-        }}
-      >
-        {restaurants &&
-          restaurants.map((restaurant) => (
-            <ImageButton
-              to={`/restaurant/${restaurant.id}`}
-              key={restaurant.id}
-              sx={{
-                "@media (max-width: 960px)": {
-                  width: cartItems.length !== 0 ? "80%" : "48%",
-                },
-                "@media (min-width: 960px)": {
-                  width: cartItems.length !== 0 ? "48%" : "30%",
-                },
-              }}
-            >
-              <ImageSrc
-                style={{ backgroundImage: `url(${restaurant.photo})` }}
-              />
-              <ImageBackdrop className="MuiImageBackdrop-root" />
-              <Image>
-                <Typography
-                  component="span"
-                  variant="subtitle1"
-                  color="inherit"
-                  sx={{
-                    position: "relative",
-                    p: 4,
-                    pt: 2,
-                    pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
-                  }}
-                >
-                  {restaurant.name}
-                  <ImageMarked className="MuiImageMarked-root" />
-                </Typography>
-              </Image>
-            </ImageButton>
-          ))}
-      </Box>
+      {restaurants && restaurants.length !== 0 ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            flexWrap: "wrap",
+            width: "100%",
+            gap: "20px",
+          }}
+        >
+          {restaurants &&
+            restaurants.map((restaurant) => (
+              <ImageButton
+                to={`/restaurant/${restaurant.id}`}
+                key={restaurant.id}
+                sx={{
+                  "@media (max-width: 960px)": {
+                    width: cartItems.length !== 0 ? "80%" : "48%",
+                  },
+                  "@media (min-width: 960px)": {
+                    width: cartItems.length !== 0 ? "48%" : "30%",
+                  },
+                }}
+              >
+                <ImageSrc
+                  style={{ backgroundImage: `url(${restaurant.photo})` }}
+                />
+                <ImageBackdrop className="MuiImageBackdrop-root" />
+                <Image>
+                  <Typography
+                    component="span"
+                    variant="subtitle1"
+                    color="inherit"
+                    sx={{
+                      position: "relative",
+                      p: 4,
+                      pt: 2,
+                      pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
+                    }}
+                  >
+                    {restaurant.name}
+                    <ImageMarked className="MuiImageMarked-root" />
+                  </Typography>
+                </Image>
+              </ImageButton>
+            ))}
+        </Box>
+      ) : (
+        <p>not faund</p>
+      )}
     </div>
   );
 }

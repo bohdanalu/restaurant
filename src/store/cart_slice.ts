@@ -11,25 +11,30 @@ const getStorageItems = () => {
   if (storedCartItems) {
     return JSON.parse(storedCartItems);
   }
+  return [];
 };
 
 const initialState: AppState = {
-  cartItems: [],
+  cartItems: getStorageItems(),
 };
 
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addItemToCart: (state, action: PayloadAction<{ menuItem: MenuType }>) => {
-      const { menuItem } = action.payload;
+    addItemToCart: (
+      state,
+      action: PayloadAction<{ menuItem: MenuType; restaurantId: number }>
+    ) => {
+      const { menuItem, restaurantId } = action.payload;
       const index = state.cartItems.findIndex(
-        (item) => item.menuItem.id === menuItem.id
+        (item) =>
+          item.menuItem.id === menuItem.id && item.restaurantId === restaurantId
       );
       if (index !== -1) {
         state.cartItems[index].quantity += 1;
       } else {
-        state.cartItems.push({ menuItem, quantity: 1 });
+        state.cartItems.push({ menuItem, quantity: 1, restaurantId });
       }
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
@@ -44,6 +49,7 @@ export const cartSlice = createSlice({
           state.cartItems.splice(index, 1);
         }
       }
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
     incrementItem: (state, action) => {
       const index = state.cartItems.findIndex(

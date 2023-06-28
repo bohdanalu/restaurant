@@ -6,6 +6,7 @@ import { RestaurantType } from "../types";
 import { Typography, Box, styled } from "@mui/material";
 import type { RootState } from "../store/store";
 
+// restaurantProps -> is a type so first letter should be capital
 interface restaurantProps {
   restaurants: RestaurantType[];
   setRestaurants: React.Dispatch<React.SetStateAction<RestaurantType[]>>;
@@ -81,6 +82,7 @@ function Home({ restaurants, setRestaurants, urlMain }: restaurantProps) {
     axios.get(`${urlMain}`).then((response) => {
       setRestaurants(response.data);
     });
+    // ideally you also need to implement error handling for your request -> as every request can fail and we need to somehow handle it
   }, []);
 
   return (

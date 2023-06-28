@@ -10,6 +10,8 @@ import { Container, Box } from "@mui/material";
 
 function App() {
   const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
+
+  // variables restaurantsURL, menuURL -> keep them in some separate `constants.ts` file. There is no need to keep these variable in this component
   const restaurantsURL = "https://bohdanalu.github.io/restaurant.json";
   const menuURL = "https://bohdanalu.github.io/menu.json";
 

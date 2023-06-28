@@ -15,17 +15,19 @@ interface restaurantProps {
 }
 
 function Restaurant({
-  restaurants,
+  restaurants, // keep restaurants in redux store
   setRestaurants,
   urlMain,
   menuUrl,
 }: restaurantProps) {
   const { id } = useParams<{ id: string }>();
   const [menu, setMenu] = useState<MenuType[]>([]);
-  const [menuFetched, setMenuFetched] = useState<MenuType[]>([]);
+  const [menuFetched, setMenuFetched] = useState<MenuType[]>([]); // what is the difference between `menuFetched` and `menu` ? seems like they have same data inside
 
   useEffect(() => {
     if (restaurants.length === 0) {
+
+
       axios
         .get(`${urlMain}`)
         .then((response) => {

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
 import { CartItem, MenuType } from "../types";
 
+// rename `AppState` here to `CartState` 
 interface AppState {
   cartItems: CartItem[];
 }
@@ -9,6 +10,7 @@ interface AppState {
 const getStorageItems = () => {
   const storedCartItems = localStorage.getItem("cartItems");
   if (storedCartItems) {
+    // add try/catch here as JSON.parse might throw an error
     return JSON.parse(storedCartItems);
   }
   return [];
@@ -26,6 +28,7 @@ export const cartSlice = createSlice({
       state,
       action: PayloadAction<{ menuItem: MenuType; restaurantId: number }>
     ) => {
+      // it's better to store only id of the menu item in the state instead of whole menu item
       const { menuItem, restaurantId } = action.payload;
       const index = state.cartItems.findIndex(
         (item) =>

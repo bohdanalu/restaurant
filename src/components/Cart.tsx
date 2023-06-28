@@ -34,8 +34,10 @@ function Cart() {
   const [totalItems, setTotalItems] = useState(0 as number);
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
   const currentTime = new Date().getTime();
+
+  // I think last activity time should work differently. We can not say if user is active or not based on component rerenders. It would be better to add some global event handlers like onClick and update lastActivityTime when user performs an action
   localStorage.setItem("lastActivityTime", `${currentTime}`);
-  const lastActivityTime = localStorage.getItem("lastActivityTime");
+  const lastActivityTime = localStorage.getItem("lastActivityTime"); // there is no reason of reading last activity time here as one line above you're setting `lastActivityTime`  to `currentTime`. So `lastActivityTime` is equal `currentTime` 
 
   const handleToggleCart = () => {
     setIsOpen(!isOpen);
@@ -54,6 +56,7 @@ function Cart() {
   };
 
   useEffect(() => {
+    // on line 39 you set `lastActivityTime` to current time so this logic need some improvements
     if (lastActivityTime) {
       const currentTime = new Date().getTime();
       const timeElapsed = currentTime - parseInt(lastActivityTime, 10);
@@ -65,8 +68,13 @@ function Cart() {
     }
   }, [lastActivityTime]);
 
+  // you use use effect below to calculate how many items, and total price of items 
+  // and you also set state which will trigger component rerender 
+  // it's better to use `useMemo` in this case
+  // you do calculations inside of `useMemo` -> return results and there is no need to set state or trigger additional rerender
   useEffect(() => {
     const calculateTotal = () => {
+      // instead of this `!cartItems || cartItems.length === 0` you can use `isEmpty` from `lodash` library -> `if(!isEmpty(cartItems)) {...}`
       if (!cartItems || cartItems.length === 0) {
         setTotal(0);
         return;
@@ -79,7 +87,8 @@ function Cart() {
         return acc;
       }, 0);
 
-      setTotal(+totalVal.toFixed(2));
+      
+      setTotal(+totalVal.toFixed(2)); // is there a reason for `+` before `totalVal` ?
     };
 
     const calculateTotalItems = () => {

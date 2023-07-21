@@ -4,47 +4,23 @@ import Home from "./pages/Home";
 import Restaurant from "./pages/Restaurant";
 import Header from "./components/Header";
 import Cart from "./components/Cart";
-import { RestaurantType } from "./types";
-import { useState } from "react";
 import { Container, Box } from "@mui/material";
 
 function App() {
-  const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
-  const restaurantsURL = "https://bohdanalu.github.io/restaurant.json";
-  const menuURL = "https://bohdanalu.github.io/menu.json";
-
   return (
     <div className="App">
       <Container>
-        <Header />
-        <Box sx={{ display: "flex", gap: "10px" }}>
-          <BrowserRouter>
+        <BrowserRouter>
+          <Header />
+
+          <Box sx={{ display: "flex", gap: "10px" }}>
             <Routes>
-              <Route
-                path="/"
-                element={
-                  <Home
-                    restaurants={restaurants}
-                    setRestaurants={setRestaurants}
-                    urlMain={restaurantsURL}
-                  />
-                }
-              />
-              <Route
-                path="restaurant/:id"
-                element={
-                  <Restaurant
-                    restaurants={restaurants}
-                    setRestaurants={setRestaurants}
-                    urlMain={restaurantsURL}
-                    menuUrl={menuURL}
-                  />
-                }
-              />
+              <Route path="/" element={<Home />} />
+              <Route path="restaurant/:id" element={<Restaurant />} />
             </Routes>
-          </BrowserRouter>
-          <Cart />
-        </Box>
+            <Cart />
+          </Box>
+        </BrowserRouter>
       </Container>
     </div>
   );

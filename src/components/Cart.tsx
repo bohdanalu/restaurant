@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type { RootState } from "../store/store";
 import {
   incrementItem,
@@ -26,6 +26,7 @@ import {
   ShoppingBasket,
 } from "@mui/icons-material";
 
+import DisabledByDefaultTwoToneIcon from "@mui/icons-material/DisabledByDefaultTwoTone";
 function Cart() {
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function Cart() {
   const currentTime = new Date().getTime();
   localStorage.setItem("lastActivityTime", `${currentTime}`);
   const lastActivityTime = localStorage.getItem("lastActivityTime");
+  const _ = require("lodash");
 
   const handleToggleCart = () => {
     setIsOpen(!isOpen);
@@ -65,13 +67,12 @@ function Cart() {
     }
   }, [lastActivityTime]);
 
-  useEffect(() => {
+  useMemo(() => {
     const calculateTotal = () => {
-      if (!cartItems || cartItems.length === 0) {
+      if (_.isEmpty(cartItems)) {
         setTotal(0);
         return;
       }
-
       const totalVal = cartItems.reduce((acc, curVal) => {
         if (curVal.menuItem && curVal.menuItem.price) {
           return acc + curVal.quantity * curVal.menuItem.price;
@@ -83,7 +84,7 @@ function Cart() {
     };
 
     const calculateTotalItems = () => {
-      if (!cartItems || cartItems.length === 0) {
+      if (_.isEmpty(cartItems)) {
         setTotalItems(0);
         return;
       }
@@ -104,18 +105,27 @@ function Cart() {
   }, [isSmallScreen]);
 
   return (
-    <div>
-      {cartItems && cartItems.length !== 0 && (
+    <Box>
+      {!_.isEmpty(cartItems) && (
         <>
           {isSmallScreen && (
             <IconButton
               aria-label="cart"
-              sx={{ position: "absolute", right: "1rem", top: "1rem" }}
+              sx={{
+                position: "absolute",
+                right: isOpen ? "16rem" : "8rem",
+                top: "0.5rem",
+                zIndex: "5",
+              }}
               onClick={handleToggleCart}
             >
-              <Badge color="secondary" badgeContent={totalItems}>
-                <ShoppingBasket />
-              </Badge>
+              {isOpen ? (
+                <DisabledByDefaultTwoToneIcon color="primary" />
+              ) : (
+                <Badge color="secondary" badgeContent={totalItems}>
+                  <ShoppingBasket />
+                </Badge>
+              )}
             </IconButton>
           )}
           {isOpen && (
@@ -130,8 +140,7 @@ function Cart() {
                 backgroundColor: "ButtonHighlight",
               }}
             >
-              <Divider />
-              <Typography variant="h4" component="span" mr={2} pt={2}>
+              <Typography variant="h4" component="span" mr={2} p={2}>
                 Total:
               </Typography>
               <Typography variant="h6" component="span">
@@ -140,8 +149,11 @@ function Cart() {
               <Divider />
               <List>
                 {cartItems.map((item) => (
-                  <ListItem key={item.menuItem.id}>
-                    <ListItemText>{item.menuItem.name}</ListItemText>
+                  <ListItem key={item.menuItem && item.menuItem.id}>
+                    <ListItemText>
+                      {" "}
+                      {item.menuItem && item.menuItem.name}
+                    </ListItemText>
                     <ListItemSecondaryAction
                       sx={{ display: "flex", alignItems: "center" }}
                     >
@@ -168,7 +180,7 @@ function Cart() {
           )}
         </>
       )}
-    </div>
+    </Box>
   );
 }
 

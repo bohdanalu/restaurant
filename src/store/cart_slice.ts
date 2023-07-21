@@ -2,19 +2,23 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
 import { CartItem, MenuType } from "../types";
 
-interface AppState {
+interface CartState {
   cartItems: CartItem[];
 }
 
 const getStorageItems = () => {
-  const storedCartItems = localStorage.getItem("cartItems");
-  if (storedCartItems) {
-    return JSON.parse(storedCartItems);
+  try {
+    const storedCartItems = localStorage.getItem("cartItems");
+    if (storedCartItems) {
+      return JSON.parse(storedCartItems);
+    }
+  } catch (error) {
+    console.error("Error parsing stored cart items:", error);
   }
   return [];
 };
 
-const initialState: AppState = {
+const initialState: CartState = {
   cartItems: getStorageItems(),
 };
 

@@ -1,16 +1,17 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { RestaurantType } from "../types";
-import { Typography, Box, styled } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { ThunkDispatch, AnyAction } from "@reduxjs/toolkit";
+import { Typography, Box, CircularProgress, styled } from "@mui/material";
 import type { RootState } from "../store/store";
+import {
+  selectRestaurants,
+  selectError,
+  selectLoading,
+} from "../store/restaurants_slice";
+import { fetchRestaurants } from "../store/restaurants_slice";
+import { selectCartItems } from "../store/cart_slice";
 
-interface restaurantProps {
-  restaurants: RestaurantType[];
-  setRestaurants: React.Dispatch<React.SetStateAction<RestaurantType[]>>;
-  urlMain: string;
-}
 const ImageButton = styled(Link)(({ theme }) => ({
   position: "relative",
   height: 200,
@@ -75,18 +76,27 @@ const ImageMarked = styled("span")(({ theme }) => ({
   transition: theme.transitions.create("opacity"),
 }));
 
-function Home({ restaurants, setRestaurants, urlMain }: restaurantProps) {
-  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+function Home() {
+  const cartItems = useSelector(selectCartItems);
+  const restaurants = useSelector(selectRestaurants);
+  const error = useSelector(selectError);
+  const isLoading = useSelector(selectLoading);
+  const _ = require("lodash");
+
+  const dispatch =
+    useDispatch<ThunkDispatch<RootState, undefined, AnyAction>>();
   useEffect(() => {
-    axios.get(`${urlMain}`).then((response) => {
-      setRestaurants(response.data);
-    });
+    dispatch(fetchRestaurants());
   }, []);
 
   return (
     <div style={{ width: "100%" }}>
-      <Typography variant="h2">Restaurant List</Typography>
-      {restaurants && restaurants.length !== 0 ? (
+      <Typography variant="h2" p={2}>
+        Restaurant List
+      </Typography>
+      {isLoading && <CircularProgress />}
+      {error && <span>Failed to load todos</span>}
+      {restaurants && (
         <Box
           sx={{
             display: "flex",
@@ -103,10 +113,10 @@ function Home({ restaurants, setRestaurants, urlMain }: restaurantProps) {
                 key={restaurant.id}
                 sx={{
                   "@media (max-width: 960px)": {
-                    width: cartItems.length !== 0 ? "80%" : "48%",
+                    width: !_.isEmpty(cartItems) ? "80%" : "48%",
                   },
                   "@media (min-width: 960px)": {
-                    width: cartItems.length !== 0 ? "48%" : "30%",
+                    width: !_.isEmpty(cartItems) ? "48%" : "30%",
                   },
                 }}
               >
@@ -133,8 +143,6 @@ function Home({ restaurants, setRestaurants, urlMain }: restaurantProps) {
               </ImageButton>
             ))}
         </Box>
-      ) : (
-        <p>not faund</p>
       )}
     </div>
   );

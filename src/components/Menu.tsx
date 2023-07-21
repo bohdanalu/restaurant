@@ -11,6 +11,7 @@ interface MenuProps {
 
 function Menu({ menu, restaurantId }: MenuProps) {
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const _ = require("lodash");
 
   return (
     <div>
@@ -21,8 +22,8 @@ function Menu({ menu, restaurantId }: MenuProps) {
               key={menuItem.id}
               item
               xs={12}
-              sm={cartItems.length !== 0 ? 12 : 6}
-              md={cartItems.length !== 0 ? 6 : 4}
+              sm={!_.isEmpty(cartItems) ? 12 : 6}
+              md={!_.isEmpty(cartItems) ? 6 : 4}
             >
               <MenuItem menuItem={menuItem} restaurantId={restaurantId} />
             </Grid>

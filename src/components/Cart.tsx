@@ -65,7 +65,7 @@ function Cart() {
         localStorage.setItem("lastActivityTime", `${currentTime}`);
       }
     }
-  }, [lastActivityTime]);
+  }, [lastActivityTime, handleClearCart]);
 
   useMemo(() => {
     const calculateTotal = () => {
@@ -98,7 +98,7 @@ function Cart() {
 
     calculateTotalItems();
     calculateTotal();
-  }, [cartItems]);
+  }, [cartItems, _]);
 
   useEffect(() => {
     setIsOpen(!isSmallScreen);

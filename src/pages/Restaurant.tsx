@@ -23,7 +23,7 @@ function Restaurant() {
     useDispatch<ThunkDispatch<RootState, undefined, AnyAction>>();
   useEffect(() => {
     dispatch(fetchRestaurants());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (id) {

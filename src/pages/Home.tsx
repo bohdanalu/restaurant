@@ -87,7 +87,7 @@ function Home() {
     useDispatch<ThunkDispatch<RootState, undefined, AnyAction>>();
   useEffect(() => {
     dispatch(fetchRestaurants());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div style={{ width: "100%" }}>

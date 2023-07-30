@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import type { RootState } from "../store/store";
 import {
   incrementItem,
@@ -51,9 +51,9 @@ function Cart() {
     dispatch(removeItemFromCart(id));
   };
 
-  const handleClearCart = () => {
+  const handleClearCart = useCallback(() => {
     dispatch(clearCart());
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     if (lastActivityTime) {

@@ -1,15 +1,17 @@
-import { useEffect } from "react";
 import { MenuType } from "../types";
 import MenuItem from "./MenuItem";
 import { Grid } from "@mui/material";
-import { useCart } from "../context/CartContext";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
 
 interface MenuProps {
   menu: MenuType[];
+  restaurantId: number;
 }
 
-function Menu({ menu }: MenuProps) {
-  const { cartItems } = useCart();
+function Menu({ menu, restaurantId }: MenuProps) {
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const _ = require("lodash");
 
   return (
     <div>
@@ -17,12 +19,13 @@ function Menu({ menu }: MenuProps) {
         {menu &&
           menu.map((menuItem) => (
             <Grid
+              key={menuItem.id}
               item
               xs={12}
-              sm={cartItems.length !== 0 ? 12 : 6}
-              md={cartItems.length !== 0 ? 6 : 4}
+              sm={!_.isEmpty(cartItems) ? 12 : 6}
+              md={!_.isEmpty(cartItems) ? 6 : 4}
             >
-              <MenuItem key={menuItem.id} menuItem={menuItem} />
+              <MenuItem menuItem={menuItem} restaurantId={restaurantId} />
             </Grid>
           ))}
       </Grid>

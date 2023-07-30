@@ -1,56 +1,50 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { RestaurantType, MenuType } from "../types";
+import { MenuType } from "../types";
 import axios from "axios";
 import { Typography, Box } from "@mui/material";
 import Menu from "../components/Menu";
 import { useState } from "react";
 import CategoryBtns from "../components/CategoryBtns";
+import { menuURL } from "../constants";
+import { useSelector } from "react-redux";
+import { selectRestaurants } from "../store/restaurants_slice";
+import { useDispatch } from "react-redux";
+import { ThunkDispatch, AnyAction } from "@reduxjs/toolkit";
+import { fetchRestaurants } from "../store/restaurants_slice";
+import { RootState } from "../store/store";
 
-interface restaurantProps {
-  restaurants: RestaurantType[];
-  setRestaurants: React.Dispatch<React.SetStateAction<RestaurantType[]>>;
-  urlMain: string;
-  menuUrl: string;
-}
-
-function Restaurant({
-  restaurants,
-  setRestaurants,
-  urlMain,
-  menuUrl,
-}: restaurantProps) {
+function Restaurant() {
   const { id } = useParams<{ id: string }>();
   const [menu, setMenu] = useState<MenuType[]>([]);
-  const [menuFetched, setMenuFetched] = useState<MenuType[]>([]);
-
+  const [initialMenu, setInitialMenu] = useState<MenuType[]>([]);
+  const restaurants = useSelector(selectRestaurants);
+  const dispatch =
+    useDispatch<ThunkDispatch<RootState, undefined, AnyAction>>();
   useEffect(() => {
-    if (restaurants.length === 0) {
-      axios
-        .get(`${urlMain}`)
-        .then((response) => {
-          setRestaurants(response.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [restaurants, setRestaurants, urlMain]);
+    dispatch(fetchRestaurants());
+  }, []);
 
   useEffect(() => {
     if (id) {
+      console.log(id);
       axios
-        .get(`${menuUrl}`)
+        .get(`${menuURL}`)
         .then((response) => {
-          const fetchedMenu = response.data[id].items;
-          setMenu(fetchedMenu);
-          setMenuFetched(fetchedMenu);
+          const fetchedMenu = response.data.find(
+            (restaurant: { id: string }) => restaurant.id.toString() === id
+          );
+          if (fetchedMenu) {
+            setMenu(fetchedMenu.items);
+            setInitialMenu(fetchedMenu.items);
+          }
         })
         .catch((error) => {
           console.error(error);
         });
     }
-  }, [menuUrl, setMenu, setMenuFetched, id]);
+  }, [setMenu, setInitialMenu, id]);
+
   const selectedRestaurant = restaurants.find(
     (restaurant) => restaurant.id === parseInt(id || "", 10)
   );
@@ -58,20 +52,22 @@ function Restaurant({
   const handleChooseCategories = (btn: string) => {
     let filteredMenu;
     if (btn.toLowerCase() === "all") {
-      filteredMenu = menuFetched;
+      filteredMenu = initialMenu;
     } else {
-      filteredMenu = menuFetched.filter(
-        (item) => item.category.toLowerCase() === btn.toLowerCase()
+      filteredMenu = initialMenu.filter(
+        (item) => item.category?.toLowerCase() === btn.toLowerCase()
       );
     }
-    setMenu(filteredMenu);
+    setMenu([...filteredMenu]);
   };
 
-  return (
+  return selectedRestaurant ? (
     <Box pt={2}>
-      <Typography variant="h3">{selectedRestaurant?.name}</Typography>
+      <Typography variant="h3" component={"h2"}>
+        {selectedRestaurant.name}
+      </Typography>
       <Typography sx={{ fontFamily: "Monospace" }}>
-        {selectedRestaurant?.description}
+        {selectedRestaurant.description}
       </Typography>
       <Typography variant="h4" p={2}>
         Menu
@@ -80,8 +76,10 @@ function Restaurant({
         menu={menu}
         handleChooseCategories={handleChooseCategories}
       />
-      <Menu menu={menu} />
+      <Menu menu={menu} restaurantId={selectedRestaurant.id} />
     </Box>
+  ) : (
+    <p>Menu not found</p>
   );
 }
 

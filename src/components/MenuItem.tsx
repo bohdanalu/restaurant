@@ -1,4 +1,5 @@
-import { useCart } from "../context/CartContext";
+import { useDispatch } from "react-redux";
+import { addItemToCart } from "../store/cart_slice";
 import { MenuType } from "../types";
 import {
   Card,
@@ -12,10 +13,15 @@ import {
 
 interface MenuItemProps {
   menuItem: MenuType;
+  restaurantId: number;
 }
 
-const MenuItem = ({ menuItem }: MenuItemProps) => {
-  const { handleAddtoCart } = useCart();
+const MenuItem = ({ menuItem, restaurantId }: MenuItemProps) => {
+  const dispatch = useDispatch();
+
+  const handleAddToCart = (menuItem: MenuType) => {
+    dispatch(addItemToCart({ menuItem, restaurantId }));
+  };
 
   return (
     <Card
@@ -51,7 +57,7 @@ const MenuItem = ({ menuItem }: MenuItemProps) => {
             variant="outlined"
             sx={{ textTransform: "none", position: "absolute" }}
             size="small"
-            onClick={() => handleAddtoCart(menuItem)}
+            onClick={() => handleAddToCart(menuItem)}
           >
             Add to cart
           </Button>
